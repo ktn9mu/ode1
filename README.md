@@ -20,4 +20,8 @@ Study and assess the performance of your algorithm, you can do this in a variety
 * Plot the energy of the projectile versus time
 * …
 
-Upload/push a short discussion in a file called projectiles.pdf before our next class meeting. You should be able to complete the basic projectile simulation and make a plot or two before the end of class. Feel free to discuss with others and trade ideas. You don't need to perform an extensive study, choose a few of your own “interesting” questions to study and summarize your results. 
+Explore the problem in the noptebook using the questions as a guide and include comments with your obsertvations.  You should be able to complete the basic projectile simulation and make a plot or two before the end of class. Feel free to discuss with others and trade ideas. You don't need to perform an extensive study, choose a few of your own “interesting” questions to study and summarize your results. 
+
+
+
+The programs euler.cpp and euler.py provide started template to implement the code in the notebook.  You can refer to these as examples for structuring a standalone program.
