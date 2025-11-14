@@ -1,7 +1,13 @@
 #include <iostream>
 #include <getopt.h>
-using namespace std;
+#include <cmath>
+#include <cstdio>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+using namespace std;
 
 void usage(char **argv){
   fprintf(stderr, "\nUsage: %s [options]\n",argv[0]);
@@ -15,6 +21,7 @@ int main(int argc, char **argv) {
   double vinit=10;    // m/s
   double theta0=45;   // deg
   double dt=0.01;     // time step [s]
+
   int opt;
   while ((opt = getopt(argc, argv, "v:a:t:h")) != -1) {
     switch (opt) {
@@ -30,29 +37,72 @@ int main(int argc, char **argv) {
     case 'h':
       usage(argv);
       return 0;
-      break;
-    default: /* '?' */
+    default:
       ;
     }
   }
 
   printf("Simulating projectile motion with params:\n");
   printf("(vinit,theta0,dt)=(%7.2lf,%7.2lf,%7.2f)\n",vinit,theta0,dt);
-  
 
-  // fill in the blanks below
+  // ---------------------------------------------------------
+  // INITIAL SETUP
+  // ---------------------------------------------------------
 
-  // given the boundary conditions at t=0, namely:
-  // x(0) = y(0) = 0
-  // vx(0) = vinit * cos(theta0) , vy(0) = vinit * sin(theta0)
-  // impliment Euler's method for stepping forward in time to calculate the
-  // new position of the projectile in steps of dt
-  // your simulation should stop at the last time step before y goes negative
+  // convert angle from degrees to radians
+  double theta = theta0 * M_PI / 180.0;
 
-  // eg, write out a data file containing at least the following information
-  // t   x(t)   y(t)   vx(t)   vy(t)  
-  
-  
+  // initial time
+  double t = 0.0;
+
+  // initial position
+  double x = 0.0;
+  double y = 0.0;
+
+  // initial velocities
+  double vx = vinit * cos(theta);
+  double vy = vinit * sin(theta);
+
+  const double g = 9.8;  // gravitational acceleration
+
+  // open output file
+  FILE *fp = fopen("trajectory.dat","w");
+  fprintf(fp, "# t   x   y   vx   vy\n");
+
+  // write initial point
+  fprintf(fp, "%lf %lf %lf %lf %lf\n", t, x, y, vx, vy);
+
+  // ---------------------------------------------------------
+  // EULER LOOP
+  // ---------------------------------------------------------
+
+  while (y >= 0.0) {
+
+    // update velocities
+    double vx_new = vx;           // no horizontal acceleration
+    double vy_new = vy - g * dt;  // gravity acts downward
+
+    // update positions
+    double x_new = x + vx * dt;
+    double y_new = y + vy * dt;
+
+    // update time
+    t += dt;
+
+    // assign updates
+    vx = vx_new;
+    vy = vy_new;
+    x  = x_new;
+    y  = y_new;
+
+    // write to file
+    fprintf(fp, "%lf %lf %lf %lf %lf\n", t, x, y, vx, vy);
+  }
+
+  fclose(fp);
+
+  printf("Projectile landed at x ≈ %.3f meters\n", x);
+
+  return 0;
 }
-
 
